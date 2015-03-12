@@ -90,9 +90,18 @@ ORDER BY candidate.name;
 
 //table
 
-To return recommendation:
-MATCH (vac1:Vacancy {name:"Vacancy 1"})<-[:APPLIED_FOR]-(cand:Candidate)
-MATCH (cand)-[:HAS_APPLICATION]->(app:Application)-[:APPLIED_FOR]->(otherVacs:Vacancy)
-RETURN otherVacs;
+Return suggested vacancies that users also applied for:
+[source,cypher]
+----
+MATCH (vac1:Vacancy {name:"Vacancy 1"})<-[:APPLIED_FOR]-(app:Application)<-[]-(cand:Candidate)-[:HAS_APPLICATION]->(:Application)-[:APPLIED_FOR]->(otherVacs:Vacancy)
+RETURN otherVacs.name;
+----
 
+
+Return suggested vacancies that users also viewed:
+[source,cypher]
+----
+MATCH (vac1:Vacancy {name:"Vacancy 1"})<-[:HAS_VIEWED]-(cand:Candidate)-[:HAS_VIEWED]->(otherVacs:Vacancy)
+RETURN otherVacs.name;
+----
 
