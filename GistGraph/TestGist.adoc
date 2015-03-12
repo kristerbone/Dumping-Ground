@@ -57,7 +57,7 @@ CREATE (vac1:Vacancy {name: "Vacancy 1"}),
 
 == Use cases
 
-=== Find number of times vacancies been viewed (not great for performance - wide reaching)
+=== Find number of times a vacancy has been viewed (not great for performance as a wide reaching / unbounded query)
 [source,cypher]
 ----
 MATCH (vac:Vacancy)<-[viewCount:HAS_VIEWED]-(candidate:Candidate)
@@ -66,17 +66,27 @@ ORDER BY vac.name;
 ----
 //table
 
-=== Increment the number of times each user has viewed each vacancy
+=== Increment the number of times each user has viewed vacancies they have already seen 
 [source,cypher]
 ----
 
-MATCH (v:Vacancy)
 MATCH (c:Candidate)
+MERGE (c)-[hv:HAS_VIEWED]->(v:Vacancy)
+	ON CREATE SET hv.count = 1 
+	ON MATCH SET hv.count = hv.count + 1
+RETURN c.name as Candidate, v.name as Vacancy, hv.count as ViewedCount;
+----
+//table
+
+=== Increment times specific vacancy viewed by specific candidate
+[source,cypher]
+----
+
+MATCH (c:Candidate {name:"Candidate 1"} )-[:HAS_VIEWED]->(v:Vacancy {name:"Vacancy 4"} )
 MERGE (c)-[hv:HAS_VIEWED]->(v)
 	ON CREATE SET hv.count = 1 
 	ON MATCH SET hv.count = hv.count + 1
-RETURN "Incremented";
-
+RETURN c.name as Candidate, v.name as Vacancy, hv.count as ViewedCount;
 ----
 //table
 
