@@ -45,12 +45,12 @@ CREATE (vac1:Vacancy {name: "Vacancy 1"}),
 	(cand2)-[:HAS_APPLICATION]->(cand2vac4app2),
 	(cand3)-[:HAS_APPLICATION]->(cand3vac1app1),
 	(cand3)-[:HAS_APPLICATION]->(cand3vac4app2),
-	(cand1vac1app1)-[:FOR]->(vac1),
-	(cand1vac2app2)-[:FOR]->(vac2),
-	(cand2vac3app1)-[:FOR]->(vac3),
-	(cand2vac4app2)-[:FOR]->(vac4),
-	(cand3vac1app1)-[:FOR]->(vac1),
-	(cand3vac4app2)-[:FOR]->(vac4);
+	(cand1vac1app1)-[:APPLIED_FOR]->(vac1),
+	(cand1vac2app2)-[:APPLIED_FOR]->(vac2),
+	(cand2vac3app1)-[:APPLIED_FOR]->(vac3),
+	(cand2vac4app2)-[:APPLIED_FOR]->(vac4),
+	(cand3vac1app1)-[:APPLIED_FOR]->(vac1),
+	(cand3vac4app2)-[:APPLIED_FOR]->(vac4);
 ----
 
 //graph
@@ -89,4 +89,10 @@ ORDER BY candidate.name;
 ----
 
 //table
+
+To return recommendation:
+MATCH (vac1:Vacancy {name:"Vacancy 1"})<-[:APPLIED_FOR]-(cand:Candidate)
+MATCH (cand)-[:HAS_APPLICATION]->(app:Application)-[:APPLIED_FOR]->(otherVacs:Vacancy)
+RETURN otherVacs;
+
 
