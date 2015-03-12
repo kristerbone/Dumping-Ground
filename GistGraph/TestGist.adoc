@@ -69,7 +69,6 @@ ORDER BY vac.name;
 === Increment the number of times each user has viewed vacancies they have already seen 
 [source,cypher]
 ----
-
 MATCH (c:Candidate)
 MERGE (c)-[hv:HAS_VIEWED]->(v:Vacancy)
 	ON CREATE SET hv.count = 1 
@@ -81,9 +80,7 @@ RETURN c.name as Candidate, v.name as Vacancy, hv.count as ViewedCount;
 === Increment times specific vacancy viewed by specific candidate
 [source,cypher]
 ----
-
-MATCH (c:Candidate {name:"Candidate 1"} )-[:HAS_VIEWED]->(v:Vacancy {name:"Vacancy 4"} )
-MERGE (c)-[hv:HAS_VIEWED]->(v)
+MERGE (c:Candidate {name:"Candidate 1"} )-[hv:HAS_VIEWED]->(v:Vacancy {name:"Vacancy 4"} )
 	ON CREATE SET hv.count = 1 
 	ON MATCH SET hv.count = hv.count + 1
 RETURN c.name as Candidate, v.name as Vacancy, hv.count as ViewedCount;
@@ -108,7 +105,7 @@ RETURN otherVacs.name;
 ----
 
 
-Return suggested vacancies that users also viewed:
+Return suggested vacancies for users that also viewed this vacancy:
 [source,cypher]
 ----
 MATCH (vac1:Vacancy {name:"Vacancy 1"})<-[:HAS_VIEWED]-(cand:Candidate)-[:HAS_VIEWED]->(otherVacs:Vacancy)
