@@ -61,7 +61,7 @@ CREATE (vac1:Vacancy {name: "Vacancy 1"}),
 [source,cypher]
 ----
 MATCH (vac:Vacancy)<-[viewCount:HAS_VIEWED]-(candidate:Candidate)
-RETURN vac, sum(viewCount.count);
+RETURN vac.name, sum(viewCount.count);
 ----
 //table
 
