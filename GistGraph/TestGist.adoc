@@ -61,7 +61,7 @@ CREATE (vac1:Vacancy {name: "Vacancy 1"}),
 [source,cypher]
 ----
 MATCH (vac:Vacancy)<-[viewCount:HAS_VIEWED]-(candidate:Candidate)
-RETURN vac.name, sum(viewCount.count)
+RETURN vac.name as Vacancy, sum(viewCount.count) as ViewCount
 ORDER BY vac.name;
 ----
 //table
@@ -75,7 +75,7 @@ MATCH (c:Candidate)
 MERGE (c)-[hv:HAS_VIEWED]->(v)
 	ON CREATE SET hv.count = 1 
 	ON MATCH SET hv.count = hv.count + 1
-RETURN hv;
+RETURN "Incremented";
 
 ----
 //table
@@ -84,7 +84,7 @@ RETURN hv;
 [source,cypher]
 ----
 MATCH (candidate:Candidate)-[viewCount:HAS_VIEWED]->(vac:Vacancy)
-RETURN candidate.name, viewCount.count, vac.name
+RETURN candidate.name as Candidate, vac.name as Vacancy, viewCount.count as ViewCount
 ORDER BY candidate.name;
 ----
 
